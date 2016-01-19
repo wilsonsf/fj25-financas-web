@@ -32,14 +32,14 @@ public class ContasBean implements Serializable {
 
 	public void grava() {
 		contaDao.adiciona(this.conta);
-		this.contas = contaDao.lista();
+		this.contas = this.contaDao.lista();
 		
 		limpaFormularioDoJSF();
 	}
 
 	public List<Conta> getContas() {
 		if (this.contas == null) {
-			this.contas = contaDao.lista();
+			this.contas = this.contaDao.lista();
 		}
 		
 		return contas;
@@ -47,7 +47,7 @@ public class ContasBean implements Serializable {
 
 	public void remove() {
 		contaDao.remove(this.conta);
-		this.contas = contaDao.lista();
+		this.contas = this.contaDao.lista();
 		
 		limpaFormularioDoJSF();
 	}

@@ -33,22 +33,29 @@ public class MovimentacoesBean implements Serializable {
 	
 	public void grava() {
 		Conta contaVinculada = contaDao.busca(this.contaId);
-		movimentacao.setConta(contaVinculada);
+		this.movimentacao.setConta(contaVinculada);
 		
-		movimentacaoDao.adiciona(movimentacao);
+		this.movimentacaoDao.adiciona(this.movimentacao);
+		
+		this.movimentacoes = this.movimentacaoDao.lista();
 		
 		limpaFormularioDoJSF();
 	}
 	
 
 	public void remove() {
-		System.out.println("Removendo a movimentacao");
-
+		this.movimentacaoDao.remove(this.movimentacao);
+		
+		this.movimentacoes = this.movimentacaoDao.lista();
 		
 		limpaFormularioDoJSF();
 	}
 
 	public List<Movimentacao> getMovimentacoes() {
+		if (this.movimentacoes == null) {
+			this.movimentacoes = this.movimentacaoDao.lista();
+		}
+		
 		return movimentacoes;
 	}
 	

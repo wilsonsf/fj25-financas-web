@@ -31,6 +31,10 @@ public class ContaDao {
 		Conta contaParaRemover = this.manager.find(Conta.class, conta.getId());
 		this.manager.remove(contaParaRemover);
 	}
+	
+	public Conta altera(Conta conta) {
+		return manager.merge(conta);
+	}
 
 }
 
