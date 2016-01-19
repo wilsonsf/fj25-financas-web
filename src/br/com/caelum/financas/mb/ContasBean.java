@@ -18,8 +18,9 @@ public class ContasBean implements Serializable {
 
 	private Conta conta = new Conta();
 	private List<Conta> contas;
+	
 	@Inject
-	private ContaDao dao;
+	private ContaDao contaDao;
 
 	public Conta getConta() {
 		return conta;
@@ -30,23 +31,23 @@ public class ContasBean implements Serializable {
 	}
 
 	public void grava() {
-		dao.adiciona(this.conta);
-		this.contas = dao.lista();
+		contaDao.adiciona(this.conta);
+		this.contas = contaDao.lista();
 		
 		limpaFormularioDoJSF();
 	}
 
 	public List<Conta> getContas() {
 		if (this.contas == null) {
-			this.contas = dao.lista();
+			this.contas = contaDao.lista();
 		}
 		
 		return contas;
 	}
 
 	public void remove() {
-		dao.remove(this.conta);
-		this.contas = dao.lista();
+		contaDao.remove(this.conta);
+		this.contas = contaDao.lista();
 		
 		limpaFormularioDoJSF();
 	}
