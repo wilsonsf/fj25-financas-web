@@ -10,7 +10,7 @@ import br.com.caelum.financas.modelo.Conta;
 
 @Stateless
 public class ContaDao {
-
+	
 	@PersistenceContext
 	EntityManager manager;
 

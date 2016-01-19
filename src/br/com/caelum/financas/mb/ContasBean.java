@@ -32,6 +32,7 @@ public class ContasBean implements Serializable {
 	public void grava() {
 		dao.adiciona(this.conta);
 		this.contas = dao.lista();
+		
 		limpaFormularioDoJSF();
 	}
 
@@ -44,8 +45,9 @@ public class ContasBean implements Serializable {
 	}
 
 	public void remove() {
-		System.out.println("Removendo a conta");
-
+		dao.remove(this.conta);
+		this.contas = dao.lista();
+		
 		limpaFormularioDoJSF();
 	}
 
