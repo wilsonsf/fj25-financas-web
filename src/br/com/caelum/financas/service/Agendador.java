@@ -1,9 +1,26 @@
 package br.com.caelum.financas.service;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
+
+@Stateless
 public class Agendador {
 
 	private static int totalCriado;
 
+	
+	@PostConstruct
+	void posConstrucao() {
+		System.out.println("criando agendador");
+		totalCriado++;
+	}
+	
+	@PreDestroy
+	void preDestruicao() {
+		System.out.println("destruindo agendador");
+	}
+	
 	public void executa() {
 		System.out.printf("%d instancias criadas %n", totalCriado);
 
