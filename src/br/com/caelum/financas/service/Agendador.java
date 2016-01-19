@@ -1,10 +1,15 @@
 package br.com.caelum.financas.service;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.Stateless;
+import javax.ejb.AccessTimeout;
+import javax.ejb.Singleton;
 
-@Stateless
+//@Stateless
+@Singleton
+@AccessTimeout(unit = TimeUnit.SECONDS, value = 5)
 public class Agendador {
 
 	private static int totalCriado;
