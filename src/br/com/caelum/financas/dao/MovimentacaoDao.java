@@ -13,6 +13,7 @@ import br.com.caelum.financas.exception.ValorInvalidoException;
 import br.com.caelum.financas.modelo.Conta;
 import br.com.caelum.financas.modelo.Movimentacao;
 import br.com.caelum.financas.modelo.TipoMovimentacao;
+import br.com.caelum.financas.modelo.ValorPorMesEAno;
 
 @Stateless
 public class MovimentacaoDao {
@@ -86,6 +87,22 @@ public class MovimentacaoDao {
 		
 		TypedQuery<Movimentacao> query = manager.createQuery(jpql, Movimentacao.class);
 		query.setParameter("titular", "%" + titular + "%");
+		
+		return query.getResultList();
+	}
+	
+	public List<ValorPorMesEAno> listaMesesComMovimentacoes(Conta conta, TipoMovimentacao tipo) {
+		String classFQN = ValorPorMesEAno.class.getName();
+		
+		String jpql = "select new " + classFQN + "(sum(m.valor), month(m.data), year(m.data)) "
+					+ "from Movimentacao m "
+					+ "where m.conta = :conta and m.tipoMovimentacao = :tipo "	
+					+ "group by year(m.data), month(m.data) "
+					+ "order by sum(m.valor) desc ";
+		
+		TypedQuery<ValorPorMesEAno> query = manager.createQuery(jpql, ValorPorMesEAno.class);
+		query.setParameter("conta", conta);
+		query.setParameter("tipo", tipo);
 		
 		return query.getResultList();
 	}
