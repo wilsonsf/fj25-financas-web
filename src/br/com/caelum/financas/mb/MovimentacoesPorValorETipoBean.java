@@ -23,7 +23,7 @@ public class MovimentacoesPorValorETipoBean {
 	private TipoMovimentacao tipoMovimentacao;
 
 	public void lista() {
-		this.movimentacoes = dao.buscaPor(valor, tipoMovimentacao);
+		this.movimentacoes = dao.buscaPor(this.valor, this.tipoMovimentacao);
 	}
 
 	public BigDecimal getValor() {
