@@ -33,7 +33,14 @@ public class MovimentacaoDao {
 	}
 
 	public List<Movimentacao> lista() {
-		return this.manager.createQuery("select m from Movimentacao m", Movimentacao.class).getResultList();
+//		return this.manager.createQuery("select m from Movimentacao m", Movimentacao.class).getResultList();
+		return listaComCategorias();
+	}
+	
+	public List<Movimentacao> listaComCategorias() {
+		return this.manager.createQuery("select distinct m from Movimentacao m "
+									+	"left join fetch m.categorias "
+					, Movimentacao.class).getResultList();
 	}
 	
 	public List<Movimentacao> buscaPor(Conta conta) {
