@@ -80,6 +80,16 @@ public class MovimentacaoDao {
 		return query.getSingleResult();
 	}
 	
+	public List<Movimentacao> buscaTodasMovimentacoesDo(String titular) {
+		String jpql = "select m from Movimentacao m "
+					+ "where m.conta.titular like :titular";
+		
+		TypedQuery<Movimentacao> query = manager.createQuery(jpql, Movimentacao.class);
+		query.setParameter("titular", "%" + titular + "%");
+		
+		return query.getResultList();
+	}
+	
 	public void remove(Movimentacao movimentacao) {
 		Movimentacao movimentacaoParaRemover = this.manager.find(Movimentacao.class, movimentacao.getId());
 		this.manager.remove(movimentacaoParaRemover);
