@@ -40,8 +40,8 @@
 		    		<f:convertDateTime pattern="dd/MM/yyyy" />
 		    	</h:inputText>
 		    	
-		        <h:outputText value="Categorias" rendered="false"/>
-		    	<h:panelGroup rendered="false">
+		        <h:outputText value="Categorias" rendered="true"/>
+		    	<h:panelGroup rendered="true">
 		        	<h:selectOneMenu value="#{movimentacoesBean.categoriaId}" id="selectCategoria">
 			    		<f:selectItem itemLabel="Escolha a Categoria" itemValue="" noSelectionOption="true"/>
 			    		<f:selectItems value="#{movimentacoesBean.categorias}" var="categoria" itemValue="#{categoria.id}" itemLabel="#{categoria.nome}"/>
