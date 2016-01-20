@@ -3,8 +3,6 @@ package br.com.caelum.financas.dao;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -16,7 +14,6 @@ public class ContaDao {
 	@PersistenceContext
 	EntityManager manager;
 
-	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public void adiciona(Conta conta) {
 		this.manager.persist(conta);
 	}
