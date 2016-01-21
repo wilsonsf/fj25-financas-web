@@ -1,14 +1,11 @@
 package br.com.caelum.financas.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.AccessTimeout;
-import javax.ejb.Schedule;
 import javax.ejb.ScheduleExpression;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -70,14 +67,15 @@ public class Agendador {
 		// Realizar acesso ao BD com JPA e verifica as contas
 	}
 	
-	@Schedule(hour="*", minute="*", second="0", persistent=false)
+	/*
+	@Schedule(hour="10", minute="0/15", second="0", persistent=false)
 	public void enviaEmailComUltimasMovimentacoes() {
 		System.out.println("enviando email agora! : " + new SimpleDateFormat().format(new Date()));
 	}
 	
-	@Schedule(dayOfWeek="Tue",hour="16", minute="55", second="0", persistent=false)
+	@Schedule(dayOfWeek="Tue",hour="15", minute="0", second="0", persistent=false)
 	public void enviaEmailSemanal() {
 		System.out.println("enviando email semanal");
 	}
-
+	 */
 }
