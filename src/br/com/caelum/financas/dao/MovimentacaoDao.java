@@ -1,11 +1,12 @@
 package br.com.caelum.financas.dao;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -16,16 +17,19 @@ import br.com.caelum.financas.modelo.TipoMovimentacao;
 import br.com.caelum.financas.modelo.ValorPorMesEAno;
 
 @Stateless
-public class MovimentacaoDao {
+public class MovimentacaoDao implements Serializable{
 
-	@PersistenceContext
+	private static final long serialVersionUID = 1L;
+
+	@Inject
 	EntityManager manager;
 
 	public void adiciona(Movimentacao movimentacao) {
-		this.manager.persist(movimentacao);
-		
 		if (movimentacao.getValor().compareTo(BigDecimal.ZERO) < 0)
 			throw new ValorInvalidoException("Movimentação Negativa");
+		
+		this.manager.joinTransaction();
+		this.manager.persist(movimentacao);
 	}
 
 	public Movimentacao busca(Integer id) {
@@ -33,8 +37,7 @@ public class MovimentacaoDao {
 	}
 
 	public List<Movimentacao> lista() {
-//		return this.manager.createQuery("select m from Movimentacao m", Movimentacao.class).getResultList();
-		return listaComCategorias();
+		return this.manager.createQuery("select m from Movimentacao m", Movimentacao.class).getResultList();
 	}
 	
 	public List<Movimentacao> listaComCategorias() {
@@ -115,6 +118,7 @@ public class MovimentacaoDao {
 	}
 	
 	public void remove(Movimentacao movimentacao) {
+		this.manager.joinTransaction();
 		Movimentacao movimentacaoParaRemover = this.manager.find(Movimentacao.class, movimentacao.getId());
 		this.manager.remove(movimentacaoParaRemover);
 	}

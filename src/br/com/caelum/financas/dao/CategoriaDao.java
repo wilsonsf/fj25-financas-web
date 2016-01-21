@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import br.com.caelum.financas.modelo.Categoria;
 
@@ -14,7 +14,7 @@ public class CategoriaDao implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@PersistenceContext
+	@Inject
 	EntityManager manager;
 	
 	public Categoria busca(Integer id) {
