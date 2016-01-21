@@ -65,13 +65,12 @@ public class MovimentacaoDao implements Serializable{
 	public List<Movimentacao> buscaPor(BigDecimal valor, TipoMovimentacao tipo) {
 		String jpql = "select m from Movimentacao m "
 					+ "where m.valor <= :valor "
-					+ (tipo != null ? "and m.tipoMovimentacao = :tipo " : "");
+					+ "and m.tipoMovimentacao = :tipo ";
 		
-		TypedQuery<Movimentacao> query = manager.createQuery(jpql,Movimentacao.class);
+		TypedQuery<Movimentacao> query = this.manager.createQuery(jpql,Movimentacao.class);
 		query.setParameter("valor", valor);
-		
-		if (tipo != null)
-			query.setParameter("tipo", tipo);
+		query.setParameter("tipo", tipo);
+		query.setHint("org.hibernate.cacheable", true);
 		
 		return query.getResultList();
 	}
