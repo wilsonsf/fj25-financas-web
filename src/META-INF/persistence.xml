@@ -12,6 +12,9 @@
 		<class>br.com.caelum.financas.modelo.Movimentacao</class>
 		<class>br.com.caelum.financas.modelo.Categoria</class>
 
+        <!-- opções: ALL, NONE, ENABLE_SELECTIVE, DISABLE_SELECTIVE, UNSPECIFIED -->
+        <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+        
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 
@@ -20,6 +23,9 @@
 			
 			<!-- poderia ser: update, create, create-drop, validate, none -->
 			<property name="hibernate.hbm2ddl.auto" value="update" />
+			
+			<property name="hibernate.cache.use_second_level_cache" value="true" />
+			
 		</properties>
 	</persistence-unit>
 
