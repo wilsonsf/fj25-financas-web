@@ -7,7 +7,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import br.com.caelum.financas.exception.ValorInvalidoException;
@@ -51,13 +50,10 @@ public class MovimentacaoDao implements Serializable{
 					+ "where m.conta = :conta "
 					+ "order by m.valor desc";
 		
-		Query query = manager.createQuery(jpql);
+		TypedQuery<Movimentacao> query = manager.createQuery(jpql, Movimentacao.class);
 		query.setParameter("conta", conta);
 		
-		@SuppressWarnings("unchecked")
-		List<Movimentacao> movimentacoes = query.getResultList();
-		
-		return movimentacoes;
+		return query.getResultList();
 	}
 
 	public List<Movimentacao> buscaPor(BigDecimal valor, TipoMovimentacao tipo) {
@@ -65,16 +61,13 @@ public class MovimentacaoDao implements Serializable{
 					+ "where m.valor <= :valor "
 					+ (tipo != null ? "and m.tipoMovimentacao = :tipo " : "");
 		
-		Query query = manager.createQuery(jpql);
+		TypedQuery<Movimentacao> query = manager.createQuery(jpql,Movimentacao.class);
 		query.setParameter("valor", valor);
 		
 		if (tipo != null)
 			query.setParameter("tipo", tipo);
 		
-		@SuppressWarnings("unchecked")
-		List<Movimentacao> movimentacoes = query.getResultList();
-		
-		return movimentacoes;
+		return query.getResultList();
 	}
 	
 	public BigDecimal calculaTotalMovimentado(Conta conta, TipoMovimentacao tipo) {
