@@ -9,9 +9,11 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CompoundSelection;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -100,19 +102,33 @@ public class MovimentacaoDao implements Serializable{
 	}
 	
 	public List<ValorPorMesEAno> listaMesesComMovimentacoes(Conta conta, TipoMovimentacao tipo) {
-		String classFQN = ValorPorMesEAno.class.getName();
-		
-		String jpql = "select new " + classFQN + "(sum(m.valor), month(m.data), year(m.data)) "
-					+ "from Movimentacao m "
-					+ "where m.conta = :conta and m.tipoMovimentacao = :tipo "	
-					+ "group by year(m.data), month(m.data) "
-					+ "order by sum(m.valor) desc ";
-		
-		TypedQuery<ValorPorMesEAno> query = manager.createQuery(jpql, ValorPorMesEAno.class);
-		query.setParameter("conta", conta);
-		query.setParameter("tipo", tipo);
-		
-		return query.getResultList();
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ValorPorMesEAno> criteria = builder.createQuery(ValorPorMesEAno.class);
+		Root<Movimentacao> root = criteria.from(Movimentacao.class);
+
+		Path<Calendar> movData = root.<Calendar>get("data");
+		Expression<Calendar> movMonth = builder.function("month", Calendar.class, movData);
+		Expression<Calendar> movYear = builder.function("year", Calendar.class, movData);
+
+		CompoundSelection<ValorPorMesEAno> selection = builder.construct(ValorPorMesEAno.class,
+				builder.sum(root.get("valor").as(BigDecimal.class)),
+				movMonth,
+				movYear);
+
+		criteria = criteria.select(selection).groupBy(movYear,movMonth);
+
+		Predicate predicate = builder.conjunction();
+		if (conta != null && conta.getId() != null) {
+			predicate = builder.and(predicate, 
+					builder.equal(root.<Conta>get("conta"), conta));
+		}
+		if (tipo != null) {
+			predicate = builder.and(predicate, 
+					builder.equal(root.<TipoMovimentacao>get("tipoMovimentacao"), tipo));
+		}
+
+		criteria.where(predicate);
+		return manager.createQuery(criteria).getResultList();
 	}
 	
 	public List<Movimentacao> pesquisa(Conta conta, TipoMovimentacao tipo, Integer mes) {
