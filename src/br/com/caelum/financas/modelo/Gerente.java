@@ -2,13 +2,14 @@ package br.com.caelum.financas.modelo;
 
 import java.io.Serializable;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Gerente implements Serializable{
+public class Gerente implements Serializable, Enderecavel{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -18,9 +19,8 @@ public class Gerente implements Serializable{
 	private String nome;
 	private String telefone;
 	
-	private String rua;
-	private String cidade;
-	private String estado;
+	@Embedded
+	private Endereco endereco = new Endereco();
 	
 	public Integer getId() {
 		return id;
@@ -40,23 +40,24 @@ public class Gerente implements Serializable{
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
+	public Endereco getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+	
+	@Override
 	public String getRua() {
-		return rua;
+		return this.endereco.getRua();
 	}
-	public void setRua(String rua) {
-		this.rua = rua;
-	}
+	@Override
 	public String getCidade() {
-		return cidade;
+		return this.endereco.getCidade();
 	}
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
+	@Override
 	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
+		return this.endereco.getEstado();
 	}
 
 }
