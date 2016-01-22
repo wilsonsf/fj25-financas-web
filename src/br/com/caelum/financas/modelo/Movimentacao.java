@@ -18,8 +18,10 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
 
+@Audited
 @Cacheable
 @Entity
 public class Movimentacao implements Serializable {

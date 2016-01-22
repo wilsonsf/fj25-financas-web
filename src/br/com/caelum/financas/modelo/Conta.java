@@ -18,10 +18,12 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
 
 import br.com.caelum.financas.validator.NumeroEAgencia;
 
+@Audited
 @NumeroEAgencia
 @Cacheable
 @Entity
