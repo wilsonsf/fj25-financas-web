@@ -24,10 +24,12 @@
 			<!-- poderia ser: update, create, create-drop, validate, none -->
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			
+			<!-- habilita uso de cache de segundo nível -->
 			<property name="hibernate.cache.use_second_level_cache" value="true" />
-			
+			<!-- habilita uso de cache de query -->
 			<property name="hibernate.cache.use_query_cache" value="true"/>
-			
+			<!-- habilita a geração de estatísticas de query -->
+			<property name="hibernate.generate_statistics" value="true"/>
 		</properties>
 	</persistence-unit>
 
