@@ -15,6 +15,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 @Cacheable
 @Entity
@@ -25,8 +29,14 @@ public class Movimentacao implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	
+	@NotBlank
 	private String descricao;
+	
+	@NotNull
 	private Calendar data;
+	
+	@DecimalMin(value="0.01")
 	private BigDecimal valor;
 	
 	@ManyToOne 
