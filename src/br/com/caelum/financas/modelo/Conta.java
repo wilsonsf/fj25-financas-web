@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -20,10 +18,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotBlank;
 
+import br.com.caelum.financas.validator.NumeroEAgencia;
+
+@NumeroEAgencia
 @Cacheable
-@Entity @Table(uniqueConstraints = {
-		@UniqueConstraint(columnNames= {"agencia","numero"})
-		})
+@Entity
 public class Conta implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -31,27 +30,27 @@ public class Conta implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@NotBlank
 	@Pattern(regexp="[A-Z].*")
 	private String titular;
 	@NotBlank
 	private String agencia;
-	
+
 	@NotBlank
 	private String numero;
-	
+
 	@Size(min=3,max=20)
 	@NotBlank
 	private String banco;
-	
+
 	@Version
 	private Integer versao = 0;
 
 	@Cache(usage=CacheConcurrencyStrategy.TRANSACTIONAL)
 	@OneToMany(mappedBy="conta")
 	private List<Movimentacao> movimentacoes = new ArrayList<Movimentacao>();
-	
+
 	public Integer getId() {
 		return id;
 	}

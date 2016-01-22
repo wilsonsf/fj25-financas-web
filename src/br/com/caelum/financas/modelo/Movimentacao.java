@@ -23,31 +23,31 @@ import org.hibernate.validator.constraints.NotBlank;
 @Cacheable
 @Entity
 public class Movimentacao implements Serializable {
- 
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@NotBlank
 	private String descricao;
-	
+
 	@NotNull
 	private Calendar data;
-	
+
 	@DecimalMin(value="0.01")
 	private BigDecimal valor;
-	
+
 	@ManyToOne 
 	private Conta conta;
-	
+
 	@ManyToMany
 	private List<Categoria> categorias = new ArrayList<>();
-	
+
 	@Enumerated(EnumType.STRING)
 	private TipoMovimentacao tipoMovimentacao;
-	
+
 	public TipoMovimentacao getTipoMovimentacao() {
 		return tipoMovimentacao;
 	}
