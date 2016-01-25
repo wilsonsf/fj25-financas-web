@@ -30,6 +30,12 @@
 			<property name="hibernate.cache.use_query_cache" value="true"/>
 			<!-- habilita a geração de estatísticas de query -->
 			<property name="hibernate.generate_statistics" value="true"/>
+			
+			<property name="hibernate.search.default.directory_provider" value="filesystem"/>
+			<property name="hibernate.search.default.indexBase" 
+			         value="/Users/wilsonsf/Developer/Cursos/Caelum-FJ25/fj25-financas-web/WebContent/WEB-INF/lucene/indexes"/>
+            <property name="ibernate.search.analyzer" value="org.apache.lucene.analysis.standard.standardAnalyzer"/>
+            
 		</properties>
 	</persistence-unit>
 

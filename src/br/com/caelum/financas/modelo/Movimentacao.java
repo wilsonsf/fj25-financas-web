@@ -20,8 +20,11 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.validator.constraints.NotBlank;
 
+@Indexed
 @Audited
 @Cacheable
 @Entity
@@ -33,6 +36,7 @@ public class Movimentacao implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
+	@Field
 	@NotBlank
 	private String descricao;
 
@@ -43,7 +47,7 @@ public class Movimentacao implements Serializable {
 	private BigDecimal valor;
 
 	@Valid
-	@ManyToOne 
+	@ManyToOne
 	private Conta conta;
 
 	@ManyToMany
@@ -53,7 +57,7 @@ public class Movimentacao implements Serializable {
 	private TipoMovimentacao tipoMovimentacao;
 
 	public TipoMovimentacao getTipoMovimentacao() {
-		return tipoMovimentacao;
+		return this.tipoMovimentacao;
 	}
 
 	public void setTipoMovimentacao(TipoMovimentacao tipoMovimentacao) {
@@ -61,7 +65,7 @@ public class Movimentacao implements Serializable {
 	}
 
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Integer id) {
@@ -69,7 +73,7 @@ public class Movimentacao implements Serializable {
 	}
 
 	public String getDescricao() {
-		return descricao;
+		return this.descricao;
 	}
 
 	public void setDescricao(String descricao) {
@@ -77,7 +81,7 @@ public class Movimentacao implements Serializable {
 	}
 
 	public Calendar getData() {
-		return data;
+		return this.data;
 	}
 
 	public void setData(Calendar data) {
@@ -85,7 +89,7 @@ public class Movimentacao implements Serializable {
 	}
 
 	public BigDecimal getValor() {
-		return valor;
+		return this.valor;
 	}
 
 	public void setValor(BigDecimal valor) {
@@ -93,7 +97,7 @@ public class Movimentacao implements Serializable {
 	}
 
 	public Conta getConta() {
-		return conta;
+		return this.conta;
 	}
 
 	public void setConta(Conta conta) {
@@ -101,7 +105,7 @@ public class Movimentacao implements Serializable {
 	}
 
 	public List<Categoria> getCategorias() {
-		return categorias;
+		return this.categorias;
 	}
 
 	public void setCategorias(List<Categoria> categorias) {

@@ -15,41 +15,41 @@ import org.hibernate.envers.Audited;
 public class Gerente implements Serializable, Enderecavel{
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	private String nome;
 	private String telefone;
-	
+
 	@Embedded
 	private Endereco endereco = new Endereco();
-	
+
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getNome() {
-		return nome;
+		return this.nome;
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 	public String getTelefone() {
-		return telefone;
+		return this.telefone;
 	}
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
 	public Endereco getEndereco() {
-		return endereco;
+		return this.endereco;
 	}
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
-	
+
 	@Override
 	public String getRua() {
 		return this.endereco.getRua();

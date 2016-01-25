@@ -54,12 +54,12 @@ public class Conta implements Serializable {
 	@Cache(usage=CacheConcurrencyStrategy.TRANSACTIONAL)
 	@OneToMany(mappedBy="conta")
 	private List<Movimentacao> movimentacoes = new ArrayList<Movimentacao>();
-	
+
 	@OneToOne @JoinColumn(unique=true)
 	private Gerente gerente;
 
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Integer id) {
@@ -67,7 +67,7 @@ public class Conta implements Serializable {
 	}
 
 	public String getTitular() {
-		return titular;
+		return this.titular;
 	}
 
 	public void setTitular(String titular) {
@@ -75,7 +75,7 @@ public class Conta implements Serializable {
 	}
 
 	public String getAgencia() {
-		return agencia;
+		return this.agencia;
 	}
 
 	public void setAgencia(String agencia) {
@@ -83,7 +83,7 @@ public class Conta implements Serializable {
 	}
 
 	public String getNumero() {
-		return numero;
+		return this.numero;
 	}
 
 	public void setNumero(String numero) {
@@ -91,7 +91,7 @@ public class Conta implements Serializable {
 	}
 
 	public String getBanco() {
-		return banco;
+		return this.banco;
 	}
 
 	public void setBanco(String banco) {
@@ -99,11 +99,11 @@ public class Conta implements Serializable {
 	}
 
 	public List<Movimentacao> getMovimentacoes() {
-		return movimentacoes;
+		return this.movimentacoes;
 	}
 
 	public Integer getVersao() {
-		return versao;
+		return this.versao;
 	}
 
 	public void setVersao(Integer versao) {
@@ -111,7 +111,7 @@ public class Conta implements Serializable {
 	}
 
 	public Gerente getGerente() {
-		return gerente;
+		return this.gerente;
 	}
 
 	public void setGerente(Gerente gerente) {

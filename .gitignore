@@ -9,3 +9,4 @@
 hs_err_pid*
 /build/
 .settings/
+WebContent/WEB-INF/lucene/
