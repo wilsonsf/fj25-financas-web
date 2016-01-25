@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
@@ -41,6 +42,7 @@ public class Movimentacao implements Serializable {
 	@DecimalMin(value="0.01")
 	private BigDecimal valor;
 
+	@Valid
 	@ManyToOne 
 	private Conta conta;
 
