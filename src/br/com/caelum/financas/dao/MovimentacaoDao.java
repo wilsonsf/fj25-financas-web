@@ -17,6 +17,14 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.util.Version;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
+
 import br.com.caelum.financas.exception.ValorInvalidoException;
 import br.com.caelum.financas.modelo.Conta;
 import br.com.caelum.financas.modelo.Movimentacao;
@@ -34,7 +42,7 @@ public class MovimentacaoDao implements Serializable{
 	public void adiciona(Movimentacao movimentacao) {
 		if (movimentacao.getValor().compareTo(BigDecimal.ZERO) < 0)
 			throw new ValorInvalidoException("Movimentação Negativa");
-		
+
 		this.manager.joinTransaction();
 		this.manager.persist(movimentacao);
 	}
@@ -46,21 +54,21 @@ public class MovimentacaoDao implements Serializable{
 	public List<Movimentacao> lista() {
 		return this.manager.createQuery("select m from Movimentacao m", Movimentacao.class).getResultList();
 	}
-	
+
 	public List<Movimentacao> listaComCategorias() {
 		return this.manager.createQuery("select distinct m from Movimentacao m "
 									+	"left join fetch m.categorias "
 					, Movimentacao.class).getResultList();
 	}
-	
+
 	public List<Movimentacao> buscaPor(Conta conta) {
 		String jpql = "select m from Movimentacao m "
 					+ "where m.conta = :conta "
 					+ "order by m.valor desc";
-		
-		TypedQuery<Movimentacao> query = manager.createQuery(jpql, Movimentacao.class);
+
+		TypedQuery<Movimentacao> query = this.manager.createQuery(jpql, Movimentacao.class);
 		query.setParameter("conta", conta);
-		
+
 		return query.getResultList();
 	}
 
@@ -68,41 +76,42 @@ public class MovimentacaoDao implements Serializable{
 		String jpql = "select m from Movimentacao m "
 					+ "where m.valor <= :valor "
 					+ "and m.tipoMovimentacao = :tipo ";
-		
+
 		TypedQuery<Movimentacao> query = this.manager.createQuery(jpql,Movimentacao.class);
 		query.setParameter("valor", valor);
 		query.setParameter("tipo", tipo);
 		query.setHint("org.hibernate.cacheable", true);
-		
+
 		return query.getResultList();
 	}
-	
+
 	public BigDecimal calculaTotalMovimentado(Conta conta, TipoMovimentacao tipo) {
 		String jpql = "select sum(m.valor) from Movimentacao m "
 					+ "where m.conta = :conta "
 					+ (tipo != null ? "and m.tipoMovimentacao = :tipo " : "");
-		
-		TypedQuery<BigDecimal> query = manager.createQuery(jpql,BigDecimal.class);
+
+		TypedQuery<BigDecimal> query = this.manager.createQuery(jpql,BigDecimal.class);
 		query.setParameter("conta", conta);
-		
-		if (tipo != null)
+
+		if (tipo != null) {
 			query.setParameter("tipo", tipo);
-		
+		}
+
 		return query.getSingleResult();
 	}
-	
+
 	public List<Movimentacao> buscaTodasMovimentacoesDo(String titular) {
 		String jpql = "select m from Movimentacao m "
 					+ "where m.conta.titular like :titular";
-		
-		TypedQuery<Movimentacao> query = manager.createQuery(jpql, Movimentacao.class);
+
+		TypedQuery<Movimentacao> query = this.manager.createQuery(jpql, Movimentacao.class);
 		query.setParameter("titular", "%" + titular + "%");
-		
+
 		return query.getResultList();
 	}
-	
+
 	public List<ValorPorMesEAno> listaMesesComMovimentacoes(Conta conta, TipoMovimentacao tipo) {
-		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaBuilder builder = this.manager.getCriteriaBuilder();
 		CriteriaQuery<ValorPorMesEAno> criteria = builder.createQuery(ValorPorMesEAno.class);
 		Root<Movimentacao> root = criteria.from(Movimentacao.class);
 
@@ -119,21 +128,21 @@ public class MovimentacaoDao implements Serializable{
 
 		Predicate predicate = builder.conjunction();
 		if (conta != null && conta.getId() != null) {
-			predicate = builder.and(predicate, 
+			predicate = builder.and(predicate,
 					builder.equal(root.<Conta>get("conta"), conta));
 		}
 		if (tipo != null) {
-			predicate = builder.and(predicate, 
+			predicate = builder.and(predicate,
 					builder.equal(root.<TipoMovimentacao>get("tipoMovimentacao"), tipo));
 		}
 
 		criteria.where(predicate);
-		return manager.createQuery(criteria).getResultList();
+		return this.manager.createQuery(criteria).getResultList();
 	}
-	
+
 	public List<Movimentacao> pesquisa(Conta conta, TipoMovimentacao tipo, Integer mes) {
 
-		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaBuilder builder = this.manager.getCriteriaBuilder();
 		CriteriaQuery<Movimentacao> criteria = builder.createQuery(Movimentacao.class);
 		Root<Movimentacao> root = criteria.from(Movimentacao.class);
 		root.fetch("conta");
@@ -146,24 +155,46 @@ public class MovimentacaoDao implements Serializable{
 		}
 
 		if (mes != null && mes > 0 && mes <= 12) {
-			Expression<Integer> expression = 
+			Expression<Integer> expression =
 				builder.function("month", Integer.class, root.<Calendar>get("data"));
 			predicate = builder.and(predicate, builder.equal(expression, mes));
 		}
 
 		if (tipo != null) {
-			predicate = builder.and(predicate, 
+			predicate = builder.and(predicate,
 				builder.equal(root.<TipoMovimentacao>get("tipoMovimentacao"), tipo));
 		}
 
 		criteria.where(predicate);
-		return manager.createQuery(criteria).getResultList();
+		return this.manager.createQuery(criteria).getResultList();
 	}
 
 	public void remove(Movimentacao movimentacao) {
 		this.manager.joinTransaction();
 		Movimentacao movimentacaoParaRemover = this.manager.find(Movimentacao.class, movimentacao.getId());
 		this.manager.remove(movimentacaoParaRemover);
+	}
+
+	public List<Movimentacao> buscaPorDescricao(String descricao) {
+		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(this.manager);
+		Analyzer analyzer = fullTextEntityManager.getSearchFactory().getAnalyzer(Movimentacao.class);
+
+		QueryParser parser = new QueryParser(Version.LUCENE_36, "descricao", analyzer);
+
+
+		try {
+			org.apache.lucene.search.Query query;
+			query = parser.parse(descricao);
+
+			FullTextQuery textQuery = fullTextEntityManager.createFullTextQuery(query, Movimentacao.class);
+
+			@SuppressWarnings("unchecked")
+			List<Movimentacao> resultList = textQuery.getResultList();
+
+			return resultList;
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 }
